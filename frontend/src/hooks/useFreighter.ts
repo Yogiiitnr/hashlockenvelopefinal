@@ -41,16 +41,39 @@ export function useFreighter(): UseFreighterReturn {
   // Check if Freighter is installed on mount
   useEffect(() => {
     const checkFreighter = () => {
-      setIsFreighterInstalled(!!window.freighterApi);
+      // Check multiple possible injection points
+      const installed = !!(
+        window.freighterApi || 
+        (window as any).freighter ||
+        document.querySelector('[data-freighter-installed]')
+      );
+      setIsFreighterInstalled(installed);
+      console.log('Freighter detected:', installed);
+      console.log('window.freighterApi:', window.freighterApi);
+      console.log('Available window properties:', Object.keys(window).filter(k => k.toLowerCase().includes('freight')));
     };
 
     // Check immediately
     checkFreighter();
 
-    // Check again after a delay (in case Freighter loads after page)
-    const timeout = setTimeout(checkFreighter, 1000);
+    // Check again after delays (Freighter might load later)
+    const timeout1 = setTimeout(checkFreighter, 100);
+    const timeout2 = setTimeout(checkFreighter, 500);
+    const timeout3 = setTimeout(checkFreighter, 1000);
+    const timeout4 = setTimeout(checkFreighter, 2000);
 
-    return () => clearTimeout(timeout);
+    // Also listen for when the page is fully loaded
+    if (document.readyState !== 'complete') {
+      window.addEventListener('load', checkFreighter);
+    }
+
+    return () => {
+      clearTimeout(timeout1);
+      clearTimeout(timeout2);
+      clearTimeout(timeout3);
+      clearTimeout(timeout4);
+      window.removeEventListener('load', checkFreighter);
+    };
   }, []);
 
   // Check if already connected on mount

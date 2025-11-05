@@ -3,7 +3,7 @@ import { hashSecret } from '../utils/crypto';
 
 interface CreateEnvelopeFormProps {
   onSubmit: (data: EnvelopeFormData) => Promise<void>;
-  userPublicKey: string;
+  userPublicKey?: string;
 }
 
 export interface EnvelopeFormData {
