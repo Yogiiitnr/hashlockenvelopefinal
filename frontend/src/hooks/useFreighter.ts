@@ -1,20 +1,5 @@
 import { useState, useEffect } from 'react';
-
-// Freighter wallet types
-interface FreighterAPI {
-  isConnected: () => Promise<boolean>;
-  getPublicKey: () => Promise<string>;
-  signTransaction: (xdr: string, options?: { network?: string; networkPassphrase?: string }) => Promise<string>;
-  getNetwork: () => Promise<string>;
-  isAllowed: () => Promise<boolean>;
-  setAllowed: () => Promise<void>;
-}
-
-declare global {
-  interface Window {
-    freighterApi?: FreighterAPI;
-  }
-}
+import * as freighterApi from '@stellar/freighter-api';
 
 export interface UseFreighterReturn {
   publicKey: string | null;
@@ -40,17 +25,23 @@ export function useFreighter(): UseFreighterReturn {
 
   // Check if Freighter is installed on mount
   useEffect(() => {
-    const checkFreighter = () => {
-      // Check multiple possible injection points
-      const installed = !!(
-        window.freighterApi || 
-        (window as any).freighter ||
-        document.querySelector('[data-freighter-installed]')
-      );
-      setIsFreighterInstalled(installed);
-      console.log('Freighter detected:', installed);
-      console.log('window.freighterApi:', window.freighterApi);
-      console.log('Available window properties:', Object.keys(window).filter(k => k.toLowerCase().includes('freight')));
+    const checkFreighter = async () => {
+      try {
+        // Use the Freighter API to check if it's installed and connected
+        const result = await freighterApi.isConnected();
+        
+        if (result.error) {
+          setIsFreighterInstalled(false);
+          console.log('Freighter not detected:', result.error);
+        } else {
+          setIsFreighterInstalled(true);
+          console.log('Freighter detected, connected:', result.isConnected);
+        }
+      } catch (err) {
+        // If error, Freighter is not installed
+        setIsFreighterInstalled(false);
+        console.log('Freighter not installed:', err);
+      }
     };
 
     // Check immediately
@@ -60,33 +51,32 @@ export function useFreighter(): UseFreighterReturn {
     const timeout1 = setTimeout(checkFreighter, 100);
     const timeout2 = setTimeout(checkFreighter, 500);
     const timeout3 = setTimeout(checkFreighter, 1000);
-    const timeout4 = setTimeout(checkFreighter, 2000);
-
-    // Also listen for when the page is fully loaded
-    if (document.readyState !== 'complete') {
-      window.addEventListener('load', checkFreighter);
-    }
 
     return () => {
       clearTimeout(timeout1);
       clearTimeout(timeout2);
       clearTimeout(timeout3);
-      clearTimeout(timeout4);
-      window.removeEventListener('load', checkFreighter);
     };
   }, []);
 
   // Check if already connected on mount
   useEffect(() => {
     const checkConnection = async () => {
-      if (!window.freighterApi) return;
+      if (!isFreighterInstalled) return;
 
       try {
-        const isConnected = await window.freighterApi.isConnected();
-        if (isConnected) {
-          const key = await window.freighterApi.getPublicKey();
-          setPublicKey(key);
-          setConnected(true);
+        const connectedResult = await freighterApi.isConnected();
+        if (connectedResult.error) {
+          console.error('Error checking connection:', connectedResult.error);
+          return;
+        }
+
+        if (connectedResult.isConnected) {
+          const addressResult = await freighterApi.getAddress();
+          if (!addressResult.error && addressResult.address) {
+            setPublicKey(addressResult.address);
+            setConnected(true);
+          }
         }
       } catch (err) {
         console.error('Error checking connection:', err);
@@ -101,7 +91,7 @@ export function useFreighter(): UseFreighterReturn {
    * Requests access and verifies the network is set to TESTNET
    */
   const connect = async () => {
-    if (!window.freighterApi) {
+    if (!isFreighterInstalled) {
       setError('Freighter wallet is not installed. Please install it from freighter.app');
       return;
     }
@@ -110,19 +100,23 @@ export function useFreighter(): UseFreighterReturn {
     setError(null);
 
     try {
-      // Request permission to access Freighter
-      const isAllowed = await window.freighterApi.isAllowed();
+      // Request access (this will prompt the user to approve the connection)
+      const accessResult = await freighterApi.requestAccess();
       
-      if (!isAllowed) {
-        await window.freighterApi.setAllowed();
+      if (accessResult.error) {
+        throw new Error(accessResult.error.message || 'Failed to get permission');
       }
 
-      // Get the public key
-      const key = await window.freighterApi.getPublicKey();
+      // Get the address
+      const key = accessResult.address;
       
       // Verify network is TESTNET
-      const network = await window.freighterApi.getNetwork();
-      if (network !== 'TESTNET') {
+      const networkResult = await freighterApi.getNetwork();
+      if (networkResult.error) {
+        throw new Error(networkResult.error.message || 'Failed to get network');
+      }
+
+      if (networkResult.network !== 'TESTNET') {
         setError('Please switch Freighter to TESTNET network');
         setLoading(false);
         return;
@@ -156,7 +150,7 @@ export function useFreighter(): UseFreighterReturn {
    * @returns The signed transaction XDR
    */
   const signTransaction = async (xdr: string): Promise<string> => {
-    if (!window.freighterApi) {
+    if (!isFreighterInstalled) {
       throw new Error('Freighter wallet is not installed');
     }
 
@@ -165,12 +159,15 @@ export function useFreighter(): UseFreighterReturn {
     }
 
     try {
-      const signedXdr = await window.freighterApi.signTransaction(xdr, {
-        network: 'TESTNET',
+      const result = await freighterApi.signTransaction(xdr, {
         networkPassphrase: 'Test SDF Network ; September 2015',
       });
 
-      return signedXdr;
+      if (result.error) {
+        throw new Error(result.error.message || 'Failed to sign transaction');
+      }
+
+      return result.signedTxXdr;
     } catch (err: any) {
       console.error('Error signing transaction:', err);
       throw new Error(err.message || 'Failed to sign transaction');

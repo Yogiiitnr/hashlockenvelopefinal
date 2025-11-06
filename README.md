@@ -255,10 +255,19 @@ https://stellar.expert/explorer/testnet/contract/CC56K3NLC3LBFI62NKHTTFWODIFVNFH
 
 ## 🐛 Known Limitations
 
-- **Testnet Only**: Currently deployed on Testnet for testing
-- **No Actual Fund Transfer**: Transaction submission not yet implemented
-- **Single Network**: Only supports Stellar Testnet
+- **Testnet Only**: Currently deployed on Testnet for testing purposes
+- **Single Network**: Only supports Stellar Testnet (easily adaptable to Mainnet)
 - **Browser Extension Required**: Needs Freighter wallet installed
+
+## ✅ Recent Updates
+
+### v1.0 - Full Implementation Complete
+- ✅ Freighter wallet detection fixed using @stellar/freighter-api
+- ✅ Transaction submission implemented with network broadcasting
+- ✅ Complete UI with Create, Claim, and Reclaim forms
+- ✅ Real-time transaction status and notifications
+- ✅ Full error handling and user feedback
+- ✅ Responsive design with glassmorphism effects
 
 ## 📄 License
 

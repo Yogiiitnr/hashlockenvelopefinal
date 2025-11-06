@@ -3,7 +3,7 @@ import { hashSecret } from '../utils/crypto';
 
 interface CreateEnvelopeFormProps {
   onSubmit: (data: EnvelopeFormData) => Promise<void>;
-  userPublicKey?: string;
+  userPublicKey?: string; // Reserved for future use
 }
 
 export interface EnvelopeFormData {
@@ -19,7 +19,7 @@ export interface EnvelopeFormData {
  * Form component for creating a new envelope
  * Includes validation and secret hashing
  */
-export function CreateEnvelopeForm({ onSubmit, userPublicKey }: CreateEnvelopeFormProps) {
+export function CreateEnvelopeForm({ onSubmit }: CreateEnvelopeFormProps) {
   const [beneficiary, setBeneficiary] = useState('');
   const [amount, setAmount] = useState('');
   const [secret, setSecret] = useState('');
@@ -132,156 +132,171 @@ export function CreateEnvelopeForm({ onSubmit, userPublicKey }: CreateEnvelopeFo
   };
 
   return (
-    <div className="glass rounded-2xl p-8 max-w-2xl mx-auto">
-      <h2 className="text-3xl font-bold mb-6 text-white">Create New Envelope</h2>
-      
+    <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
-        <div className="mb-4 p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-white">
-          {error}
+        <div className="p-4 bg-red-500/20 border-2 border-red-500/50 rounded-xl text-white scale-in flex items-start space-x-3">
+          <span className="text-2xl">⚠️</span>
+          <div>
+            <p className="font-bold">Error</p>
+            <p className="text-sm mt-1">{error}</p>
+          </div>
         </div>
       )}
 
       {successMessage && (
-        <div className="mb-4 p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-white">
-          {successMessage}
+        <div className="p-4 bg-green-500/20 border-2 border-green-500/50 rounded-xl text-white scale-in flex items-start space-x-3">
+          <span className="text-2xl">✅</span>
+          <div>
+            <p className="font-bold">Success!</p>
+            <p className="text-sm mt-1">{successMessage}</p>
+          </div>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Beneficiary Address */}
-        <div>
-          <label className="block text-sm font-medium text-white mb-2">
-            Beneficiary Address *
-          </label>
-          <input
-            type="text"
-            value={beneficiary}
-            onChange={(e) => setBeneficiary(e.target.value)}
-            placeholder="G... (56 characters)"
-            className="input-glass w-full px-4 py-3 rounded-lg"
-            disabled={loading}
-          />
-          <p className="mt-1 text-xs text-white/60">
-            The Stellar address that will be able to claim this envelope
-          </p>
-        </div>
+      {/* Beneficiary Address */}
+      <div className="fade-in">
+        <label className="block text-sm font-semibold text-white mb-2 flex items-center">
+          <span className="mr-2">👤</span> Beneficiary Address *
+        </label>
+        <input
+          type="text"
+          value={beneficiary}
+          onChange={(e) => setBeneficiary(e.target.value)}
+          placeholder="G... (56 characters)"
+          className="input-glass w-full px-4 py-3 rounded-xl transition-all duration-300"
+          disabled={loading}
+        />
+        <p className="mt-2 text-xs text-white/60 flex items-center">
+          <span className="mr-1">ℹ️</span>
+          The Stellar address that will be able to claim this envelope
+        </p>
+      </div>
 
-        {/* Amount */}
-        <div>
-          <label className="block text-sm font-medium text-white mb-2">
-            Amount (XLM) *
-          </label>
-          <input
-            type="number"
-            step="0.0000001"
-            min="0"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="10.5"
-            className="input-glass w-full px-4 py-3 rounded-lg"
-            disabled={loading}
-          />
-          <p className="mt-1 text-xs text-white/60">
-            Amount of XLM to lock in the envelope
-          </p>
-        </div>
+      {/* Amount */}
+      <div className="fade-in" style={{animationDelay: '0.1s'}}>
+        <label className="block text-sm font-semibold text-white mb-2 flex items-center">
+          <span className="mr-2">💰</span> Amount (XLM) *
+        </label>
+        <input
+          type="number"
+          step="0.0000001"
+          min="0"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder="10.5"
+          className="input-glass w-full px-4 py-3 rounded-xl transition-all duration-300"
+          disabled={loading}
+        />
+        <p className="mt-2 text-xs text-white/60 flex items-center">
+          <span className="mr-1">ℹ️</span>
+          Amount of XLM to lock in the envelope
+        </p>
+      </div>
 
-        {/* Secret Phrase */}
-        <div>
-          <label className="block text-sm font-medium text-white mb-2">
-            Secret Phrase *
-          </label>
-          <input
-            type="password"
-            value={secret}
-            onChange={(e) => setSecret(e.target.value)}
-            placeholder="Enter a secret phrase (min 8 characters)"
-            className="input-glass w-full px-4 py-3 rounded-lg"
-            disabled={loading}
-          />
-          <p className="mt-1 text-xs text-white/60">
-            The beneficiary will need this phrase to claim the envelope. Share it securely!
-          </p>
-        </div>
+      {/* Secret Phrase */}
+      <div className="fade-in" style={{animationDelay: '0.2s'}}>
+        <label className="block text-sm font-semibold text-white mb-2 flex items-center">
+          <span className="mr-2">🔐</span> Secret Phrase *
+        </label>
+        <input
+          type="password"
+          value={secret}
+          onChange={(e) => setSecret(e.target.value)}
+          placeholder="Enter a secret phrase (min 8 characters)"
+          className="input-glass w-full px-4 py-3 rounded-xl transition-all duration-300"
+          disabled={loading}
+        />
+        <p className="mt-2 text-xs text-white/60 flex items-center">
+          <span className="mr-1">⚠️</span>
+          The beneficiary will need this phrase to claim the envelope. Share it securely!
+        </p>
+      </div>
 
-        {/* Unlock Date & Time */}
+      {/* Unlock Date & Time */}
+      <div className="fade-in" style={{animationDelay: '0.3s'}}>
+        <label className="block text-sm font-semibold text-white mb-3 flex items-center">
+          <span className="mr-2">🔓</span> Unlock Time *
+        </label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
-              Unlock Date *
-            </label>
+            <label className="block text-xs text-white/80 mb-2">Date</label>
             <input
               type="date"
               value={unlockDate}
               onChange={(e) => setUnlockDate(e.target.value)}
-              className="input-glass w-full px-4 py-3 rounded-lg"
+              className="input-glass w-full px-4 py-3 rounded-xl transition-all duration-300"
               disabled={loading}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
-              Unlock Time *
-            </label>
+            <label className="block text-xs text-white/80 mb-2">Time</label>
             <input
               type="time"
               value={unlockTime}
               onChange={(e) => setUnlockTime(e.target.value)}
-              className="input-glass w-full px-4 py-3 rounded-lg"
+              className="input-glass w-full px-4 py-3 rounded-xl transition-all duration-300"
               disabled={loading}
             />
           </div>
         </div>
-        <p className="text-xs text-white/60 -mt-4">
+        <p className="mt-2 text-xs text-white/60 flex items-center">
+          <span className="mr-1">ℹ️</span>
           When the beneficiary can start claiming the envelope
         </p>
+      </div>
 
-        {/* Expiry Date & Time */}
+      {/* Expiry Date & Time */}
+      <div className="fade-in" style={{animationDelay: '0.4s'}}>
+        <label className="block text-sm font-semibold text-white mb-3 flex items-center">
+          <span className="mr-2">⏰</span> Expiry Time *
+        </label>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
-              Expiry Date *
-            </label>
+            <label className="block text-xs text-white/80 mb-2">Date</label>
             <input
               type="date"
               value={expiryDate}
               onChange={(e) => setExpiryDate(e.target.value)}
-              className="input-glass w-full px-4 py-3 rounded-lg"
+              className="input-glass w-full px-4 py-3 rounded-xl transition-all duration-300"
               disabled={loading}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-white mb-2">
-              Expiry Time *
-            </label>
+            <label className="block text-xs text-white/80 mb-2">Time</label>
             <input
               type="time"
               value={expiryTime}
               onChange={(e) => setExpiryTime(e.target.value)}
-              className="input-glass w-full px-4 py-3 rounded-lg"
+              className="input-glass w-full px-4 py-3 rounded-xl transition-all duration-300"
               disabled={loading}
             />
           </div>
         </div>
-        <p className="text-xs text-white/60 -mt-4">
+        <p className="mt-2 text-xs text-white/60 flex items-center">
+          <span className="mr-1">ℹ️</span>
           After this time, you can reclaim the funds if unclaimed
         </p>
+      </div>
 
-        {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="btn-gradient w-full py-4 rounded-lg font-semibold text-white text-lg disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? (
-            <span className="flex items-center justify-center">
-              <span className="spinner mr-2"></span>
-              Creating Envelope...
-            </span>
-          ) : (
-            'Create Envelope'
-          )}
-        </button>
-      </form>
-    </div>
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={loading}
+        className="btn-gradient w-full py-4 rounded-xl font-bold text-white text-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 scale-in"
+        style={{animationDelay: '0.5s'}}
+      >
+        {loading ? (
+          <span className="flex items-center justify-center">
+            <span className="spinner mr-2"></span>
+            Creating Envelope...
+          </span>
+        ) : (
+          <span className="flex items-center justify-center">
+            <span className="mr-2">📨</span>
+            Create Envelope
+          </span>
+        )}
+      </button>
+    </form>
   );
 }
