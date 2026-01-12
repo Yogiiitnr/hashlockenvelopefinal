@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { hashSecret } from '../utils/crypto';
 
 interface CreateEnvelopeFormProps {
   onSubmit: (data: EnvelopeFormData) => Promise<void>;
   userPublicKey?: string; // Reserved for future use
+  templateDefaults?: {
+    amount: string;
+    unlockTime: string;
+    expiryTime: string;
+    secretHint: string;
+  } | null;
+  onTemplateUsed?: () => void;
 }
 
 export interface EnvelopeFormData {
@@ -19,7 +26,7 @@ export interface EnvelopeFormData {
  * Form component for creating a new envelope
  * Includes validation and secret hashing
  */
-export function CreateEnvelopeForm({ onSubmit }: CreateEnvelopeFormProps) {
+export function CreateEnvelopeForm({ onSubmit, templateDefaults, onTemplateUsed }: CreateEnvelopeFormProps) {
   const [beneficiary, setBeneficiary] = useState('');
   const [amount, setAmount] = useState('');
   const [secret, setSecret] = useState('');
@@ -30,6 +37,25 @@ export function CreateEnvelopeForm({ onSubmit }: CreateEnvelopeFormProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Apply template defaults when provided
+  useEffect(() => {
+    if (templateDefaults) {
+      if (templateDefaults.amount) setAmount(templateDefaults.amount);
+      if (templateDefaults.unlockTime) {
+        const [date, time] = templateDefaults.unlockTime.split('T');
+        setUnlockDate(date);
+        setUnlockTime(time);
+      }
+      if (templateDefaults.expiryTime) {
+        const [date, time] = templateDefaults.expiryTime.split('T');
+        setExpiryDate(date);
+        setExpiryTime(time);
+      }
+      // Call the callback to clear the template
+      if (onTemplateUsed) onTemplateUsed();
+    }
+  }, [templateDefaults, onTemplateUsed]);
 
   /**
    * Validate form inputs
@@ -123,9 +149,9 @@ export function CreateEnvelopeForm({ onSubmit }: CreateEnvelopeFormProps) {
       setExpiryDate('');
       setExpiryTime('');
       setSuccessMessage('Envelope created successfully! 🎉');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error creating envelope:', err);
-      setError(err.message || 'Failed to create envelope');
+      setError(err instanceof Error ? err.message : 'Failed to create envelope');
     } finally {
       setLoading(false);
     }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Start Local Server</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .method {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        code {
+            background: #f0f0f0;
+            padding: 10px;
+            display: block;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        h1 { color: #333; }
+        h3 { color: #666; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Start Your Local Server</h1>
+    <p>Choose ONE method below and run it in your terminal:</p>
+    
+    <div class="method">
+        <h3>Method 1: Python (Easiest)</h3>
+        <p>Open Command Prompt or Terminal in this folder and run:</p>
+        <code>python -m http.server 8000</code>
+        <p>Then open: <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></p>
+    </div>
+    
+    <div class="method">
+        <h3>Method 2: Node.js</h3>
+        <code>npx http-server . -p 8000 -o</code>
+    </div>
+    
+    <div class="method">
+        <h3>Method 3: VS Code Live Server</h3>
+        <p>1. Install "Live Server" extension in VS Code<br>
+           2. Right-click index.html<br>
+           3. Click "Open with Live Server"</p>
+    </div>
+    
+    <div class="method">
+        <h3>Method 4: Double Click</h3>
+        <p>Just double-click the <strong>start-server.bat</strong> file (if on Windows)</p>
+    </div>
+</body>
+</html>

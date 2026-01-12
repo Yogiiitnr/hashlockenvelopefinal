@@ -1,0 +1,9 @@
+{
+  "name": "hashlockenvelopefinal",
+  "version": "1.0.0",
+  "description": "Local server for website",
+  "scripts": {
+    "start": "npx http-server . -p 8000 -o",
+    "dev": "npx live-server --port=8000"
+  }
+}

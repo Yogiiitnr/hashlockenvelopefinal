@@ -230,6 +230,151 @@ npm run build
 npm run lint
 ```
 
+# HashLock Envelope - Setup Guide
+
+## Requirements for Another Laptop
+
+### Option 1: No Installation Required (Easiest)
+**Just open `index.html` in any web browser!**
+- Double-click `index.html`
+- Works on any computer with a browser (Chrome, Firefox, Edge, Safari)
+- No server needed if you just want to view it
+
+---
+
+### Option 2: Run Local Server (Recommended for Full Functionality)
+
+#### Dependencies Needed:
+
+**1. Python (Recommended - Easiest)**
+- Download: https://www.python.org/downloads/
+- Version: Python 3.7 or higher
+- During installation, check "Add Python to PATH"
+- Verify installation:
+  ```bash
+  python --version
+  ```
+
+**OR**
+
+**2. Node.js (Alternative)**
+- Download: https://nodejs.org/
+- Version: Node.js 14 or higher
+- Verify installation:
+  ```bash
+  node --version
+  npm --version
+  ```
+
+---
+
+## How to Deploy on Another Laptop
+
+### Step 1: Transfer Files
+Copy the entire `hashlockenvelopefinal` folder to the new laptop
+
+### Step 2: Choose Your Method
+
+**Method A: Using Python (Simplest)**
+1. Open Command Prompt/Terminal in the project folder
+2. Run:
+   ```bash
+   python -m http.server 8000
+   ```
+3. Open browser to: http://localhost:8000
+
+**Method B: Using Node.js**
+1. Open Command Prompt/Terminal in the project folder
+2. Run:
+   ```bash
+   npx http-server . -p 8000 -o
+   ```
+3. Browser will open automatically
+
+**Method C: Using VS Code (Best for Development)**
+1. Install VS Code: https://code.visualstudio.com/
+2. Install "Live Server" extension
+3. Right-click `index.html` → "Open with Live Server"
+
+**Method D: No Server (Limited Functionality)**
+1. Just double-click `index.html`
+2. Opens directly in browser
+3. Some features may not work (CORS restrictions)
+
+---
+
+## What to Transfer to Another Laptop
+
+### Required Files:
+- ✅ All HTML files (index.html, etc.)
+- ✅ All CSS files (styles folder/files)
+- ✅ All JavaScript files (scripts folder/files)
+- ✅ All image files (images folder)
+- ✅ All font files (if any)
+- ✅ This README.md file
+
+### Optional Files:
+- netlify.toml (only for Netlify deployment)
+- vercel.json (only for Vercel deployment)
+- package.json (only if using npm)
+
+---
+
+## Troubleshooting
+
+**If Python command doesn't work:**
+- Try: `python3 -m http.server 8000`
+- Make sure Python is in PATH
+
+**If port 8000 is busy:**
+- Use different port: `python -m http.server 8080`
+- Then visit: http://localhost:8080
+
+**If browser shows errors:**
+- Check if all files were transferred
+- Make sure you're in the correct folder
+- Try opening directly: double-click `index.html`
+
+---
+
+## Minimum System Requirements
+
+- **Operating System:** Windows 7+, macOS 10.10+, or Linux
+- **Browser:** Chrome 90+, Firefox 88+, Edge 90+, or Safari 14+
+- **RAM:** 2GB minimum
+- **Storage:** 100MB free space
+- **Internet:** Only needed to download Python/Node.js (not for running the site)
+
+---
+
+## Quick Start Commands
+
+**Windows:**
+```batch
+cd path\to\hashlockenvelopefinal
+python -m http.server 8000
+```
+
+**Mac/Linux:**
+```bash
+cd path/to/hashlockenvelopefinal
+python3 -m http.server 8000
+```
+
+Then open: **http://localhost:8000**
+
+---
+
+## Contact & Support
+
+If you encounter any issues, make sure:
+1. Python or Node.js is installed
+2. You're in the correct project folder
+3. No antivirus blocking the server
+4. Firewall allows local connections
+
+**That's it! Your website should now be running locally.**
+
 ## 📝 Contract Address
 
 **Testnet Contract**: `CC56K3NLC3LBFI62NKHTTFWODIFVNFHBNP3EFGDWEWVLPW5XGEUDM52G`

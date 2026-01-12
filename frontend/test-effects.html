@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visual Effects Test</title>
+    <style>
+        body {
+            background: #0f172a;
+            color: white;
+            font-family: sans-serif;
+            padding: 40px;
+        }
+        
+        /* Aurora Effect */
+        @keyframes aurora {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .aurora-text {
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #4facfe, #667eea);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: aurora 3s linear infinite;
+            font-size: 48px;
+            font-weight: 900;
+        }
+        
+        /* Holographic Effect */
+        @keyframes holographicShine {
+            0%, 100% { transform: translateX(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) rotate(45deg); }
+        }
+        
+        .holographic {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            margin: 20px 0;
+        }
+        
+        .holographic::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: holographicShine 3s ease infinite;
+        }
+        
+        /* Breathe Effect */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .breathe {
+            animation: breathe 3s ease-in-out infinite;
+            display: inline-block;
+        }
+        
+        /* Levitate Effect */
+        @keyframes levitate {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .levitate {
+            animation: levitate 3s ease-in-out infinite;
+            display: inline-block;
+        }
+        
+        .test-section {
+            margin: 40px 0;
+            padding: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Visual Effects Test Page</h1>
+    <p>If you can see these effects working, the CSS is loaded correctly:</p>
+    
+    <div class="test-section">
+        <h2>1. Aurora Rainbow Text</h2>
+        <div class="aurora-text">This Text Should Flow With Rainbow Colors</div>
+        <p>✅ If you see flowing rainbow colors, aurora effect is working!</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Holographic Card</h2>
+        <div class="holographic">
+            <h3>Holographic Effect Card</h3>
+            <p>You should see a sweeping light reflection across this card</p>
+        </div>
+        <p>✅ If you see a light beam sweeping across, holographic effect is working!</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Breathing Animation</h2>
+        <span class="breathe" style="font-size: 64px;">❤️</span>
+        <p>✅ If the heart is gently pulsing, breathe effect is working!</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Levitating Icon</h2>
+        <span class="levitate" style="font-size: 64px;">🚀</span>
+        <p>✅ If the rocket is floating up and down, levitate effect is working!</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>✅ Next Steps</h2>
+        <p>If all effects above are working:</p>
+        <ol>
+            <li>Your CSS animations are correctly defined</li>
+            <li>The browser can render the effects</li>
+            <li>Now check the main app at: <a href="http://localhost:5174/" style="color: #667eea;">http://localhost:5174/</a></li>
+            <li>If effects don't show in main app, do a <strong>hard refresh</strong>: Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)</li>
+        </ol>
+    </div>
+</body>
+</html>
