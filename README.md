@@ -1,5 +1,12 @@
 # 📨 Hash-Locked Envelopes
 
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Visit_App-blue?style=for-the-badge)](https://hashlockenvelopefinal-oocg.vercel.app/)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=flat&logo=vercel)](https://hashlockenvelopefinal-oocg.vercel.app/)
+
+## 🔗 **[➡️ LIVE DEMO: https://hashlockenvelopefinal-oocg.vercel.app/](https://hashlockenvelopefinal-oocg.vercel.app/)**
+
+---
+
 A secure blockchain-based inheritance and time-locked transfer system built on the **Stellar blockchain** using **Soroban smart contracts**. Lock XLM tokens with a secret phrase, set unlock and expiry times, and enable beneficiaries to claim funds securely.
 
 ## 🌟 Features
